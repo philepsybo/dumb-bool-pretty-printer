@@ -34,7 +34,7 @@ function tokenize(expression) {
     const regex = /(\s+|[(){}\[\]])/;
     const tokens = expression.split(regex).filter((token) => token.trim() !== '');
 
-    const result = [];
+    let result = [];
     let currentLiteral = '';
     for (const token of tokens) {
         const type = determineTokenType(token);
@@ -52,7 +52,51 @@ function tokenize(expression) {
     if (currentLiteral) {
         result.push({ type: 'literal', value: currentLiteral.trim() });
     }
+
+    //repeat the filtering until no changes are made anymore
+    let previousLength = -1;
+    while (result.length !== previousLength) {
+        previousLength = result.length;
+        result = filterOutEmptyParentheses(result);
+        result = filterOutParenthesesWithOnlyLiterals(result);
+    }
+
     return result;
+}
+
+function filterOutEmptyParentheses(tokens) {
+    const filteredTokens = [];
+
+    for (let i = 0; i < tokens.length; i++) {
+        console.log(tokens[i]);
+        
+        if (tokens[i].type === 'openParenthesis' && tokens[i + 1]?.type === 'closeParenthesis') {
+            i++;
+            continue;
+        }
+
+        filteredTokens.push(tokens[i]);
+    }
+
+    return filteredTokens;
+}
+
+function filterOutParenthesesWithOnlyLiterals(tokens) {
+    const filteredTokens = [];
+
+    for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+
+        if (token.type === 'openParenthesis' && tokens[i + 1]?.type === 'literal' && tokens[i + 2]?.type === 'closeParenthesis') {
+            filteredTokens.push(tokens[i + 1]);
+            i += 2;
+            continue;
+        } else {
+            filteredTokens.push(token);
+        }
+    }
+
+    return filteredTokens;
 }
 
 function determineTokenType(token) {
@@ -266,6 +310,28 @@ function buildAbstractSyntaxTree(tokens) {
     return assignDepth(resolveConditionals(treeWithGroups));
 }
 
+function increasesIndentation(token) {
+    return token.type === 'openParenthesis' || token.type === 'openBracket';
+}
+
+function decreasesIndentation(token) {
+    return token.type === 'closeParenthesis' || token.type === 'closeBracket';
+}
+
+function logError(message) {
+    const logArea = document.getElementById('logArea');
+    if (logArea) {
+        logArea.innerHTML += `<p class="errorMessage">${message}</p>`;
+    }
+}
+
+function logInfo(message) {
+    const logArea = document.getElementById('logArea');
+    if (logArea) {
+        logArea.innerHTML += `<p class="infoMessage">${message}</p>`;
+    }
+}
+
 function prettyPrintTree(tree) {
     const lines = [];
 
@@ -330,30 +396,25 @@ function prettyPrintTree(tree) {
         }
     }
 
-    return linesWithConsolidatedCurlies.map((line) => ' '.repeat(line.indentation * 4) + line.value).join('\n');
-}
-
-function increasesIndentation(token) {
-    return token.type === 'openParenthesis' || token.type === 'openBracket';
-}
-
-function decreasesIndentation(token) {
-    return token.type === 'closeParenthesis' || token.type === 'closeBracket';
-}
-
-function logError(message) {
-    const logArea = document.getElementById('logArea');
-    if (logArea) {
-        logArea.innerHTML += `<span class="errorMessage">${message}</span>`;
+    if (linesWithConsolidatedCurlies.length === 0) {
+        return '';
     }
+
+    return linesWithConsolidatedCurlies.map((line) => ' '.repeat(line.indentation * 4) + line.value).join('\n');
 }
 
 function prettyPrint(booleanExpression) {
     const tokens = tokenize(booleanExpression);
+    console.log("le tokens", tokens);
+    
+    if (tokens.length === 0) {
+        logInfo('No meaningful tokens found.');
+        return "";
+    }
     const isValid = checkSanity(tokens);
     if (!isValid) {
         logError('Invalid expression.');
-        return false;
+        return "";
     }
 
     const tree = buildAbstractSyntaxTree(tokens);
