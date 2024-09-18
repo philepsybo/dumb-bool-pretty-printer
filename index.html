@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boolean Expression Pretty Printer</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="prettyPrint.js" defer></script>
+    <title>Pretty Print</title>
 </head>
+
 <body>
     <header>
-        <h1>Boolean Expression Pretty Printer</h1>
+        <h1>DPPfBE</h1>
+        <h2>Dumb Pretty Printer for Boolean Expressions</h2>
     </header>
-    <main>
-        <section>
-            <h2>Input</h2>
-            <textarea id="inputArea" placeholder="Paste your boolean/conditional expression here..."></textarea>
-        </section>
-        <section>
-            <h2>Output</h2>
-            <pre id="outputArea"></pre>
-        </section>
-        <section>
-            <h2>Logs</h2>
+    <main id="content">
+        <div class="logContainer">
+            <label for="logArea">Log:</label>
             <div id="logArea"></div>
-        </section>
+        </div>
+        <div class="inputContainer">
+            <label for="inputArea">Input</label>
+            <textarea id="inputArea"></textarea>
+        </div>
+        <div class="outputContainer">
+            <label for="outputArea">Output</label>
+            <pre id="outputArea"></pre>
+        </div>
     </main>
+    <script src="prettyPrint.js"></script>
 </body>
+
 </html>

@@ -30,19 +30,6 @@ const conditionalThen = [
     'DANN',
 ];
 
-function prettyPrint(booleanExpression) {
-    const tokens = tokenize(booleanExpression);
-    const isValid = checkSanity(tokens);
-    if (!isValid) {
-        console.error('Invalid expression.');
-        return false;
-    }
-
-    const tree = buildAbstractSyntaxTree(tokens);
-    return prettyPrintTree(tree);
-
-}
-
 function tokenize(expression) {
     const regex = /(\s+|[(){}\[\]])/;
     const tokens = expression.split(regex).filter((token) => token.trim() !== '');
@@ -117,45 +104,45 @@ function checkSanity(tokens) {
     const conditionalThenCount = tokens.filter((token) => token.type === 'conditionalThen').length;
 
     if (openParentheses !== closeParentheses) {
-        console.error('Mismatched parentheses ()');
+        logError('Mismatched parentheses ()');
         if (openParentheses > closeParentheses) {
-            console.error(`Missing ${openParentheses - closeParentheses} closing parenthesis(es)`);
+            logError(`Missing ${openParentheses - closeParentheses} closing parenthesis(es)`);
         }
         if (closeParentheses > openParentheses) {
-            console.error(`Extra ${closeParentheses - openParentheses} closing parenthesis(es)`);
+            logError(`Extra ${closeParentheses - openParentheses} closing parenthesis(es)`);
         }
         return false;
     }
 
     if (openBrackets !== closeBrackets) {
-        console.error('Mismatched brackets []');
+        logError('Mismatched brackets []');
         if (openBrackets > closeBrackets) {
-            console.error(`Missing ${openBrackets - closeBrackets} closing bracket(s)`);
+            logError(`Missing ${openBrackets - closeBrackets} closing bracket(s)`);
         }
         if (closeBrackets > openBrackets) {
-            console.error(`Extra ${closeBrackets - openBrackets} closing bracket(s)`);
+            logError(`Extra ${closeBrackets - openBrackets} closing bracket(s)`);
         }
         return false;
     }
 
     if (openCurlyBraces !== closeCurlyBraces) {
-        console.error('Mismatched curly braces {}');
+        logError('Mismatched curly braces {}');
         if (openCurlyBraces > closeCurlyBraces) {
-            console.error(`Missing ${openCurlyBraces - closeCurlyBraces} closing curly brace(s)`);
+            logError(`Missing ${openCurlyBraces - closeCurlyBraces} closing curly brace(s)`);
         }
         if (closeCurlyBraces > openCurlyBraces) {
-            console.error(`Extra ${closeCurlyBraces - openCurlyBraces} closing curly brace(s)`);
+            logError(`Extra ${closeCurlyBraces - openCurlyBraces} closing curly brace(s)`);
         }
         return false;
     }
 
     if (conditionalIfCount !== conditionalThenCount) {
-        console.error('Mismatched conditional statements (if/then)');
+        logError('Mismatched conditional statements (if/then)');
         if (conditionalIfCount > conditionalThenCount) {
-            console.error(`Missing ${conditionalIfCount - conditionalThenCount} 'then' statement(s)`);
+            logError(`Missing ${conditionalIfCount - conditionalThenCount} 'then' statement(s)`);
         }
         if (conditionalThenCount > conditionalIfCount) {
-            console.error(`Extra ${conditionalThenCount - conditionalIfCount} 'then' statement(s)`);
+            logError(`Extra ${conditionalThenCount - conditionalIfCount} 'then' statement(s)`);
         }
         return false;
     }
@@ -168,12 +155,12 @@ function checkSanity(tokens) {
         } else if (token.type === 'closeCurlyBrace') {
             const lastOpen = stack.pop();
             if (!lastOpen) {
-                console.error('Extra closing curly brace found');
+                logError('Extra closing curly brace found');
                 return false;
             }
         } else if (stack.length > 0 && token.type !== 'literal') {
             // eslint-disable-next-line no-template-curly-in-string
-            console.error(`Only literals are allowed between curly braces, found: ${token.type}`);
+            logError(`Only literals are allowed between curly braces, found: ${token.type}`);
             console.info(`...${tokens.slice(i - 2, i + 3).map((t) => t.value).join(' ')}...`);
             return false;
         }
@@ -187,12 +174,12 @@ function checkSanity(tokens) {
         } else if (token.type === 'closeBracket') {
             const lastOpen = stack.pop();
             if (!lastOpen) {
-                console.error('Extra closing bracket found');
+                logError('Extra closing bracket found');
                 return false;
             }
         } else if (stack.length > 0 && token.type !== 'literal') {
             // eslint-disable-next-line no-template-curly-in-string
-            console.error(`Only literals are allowed between brackets, found: ${token.type}`);
+            logError(`Only literals are allowed between brackets, found: ${token.type}`);
             console.info(`...${tokens.slice(i - 2, i + 3).map((t) => t.value).join(' ')}...`);
             return false;
         }
@@ -343,7 +330,7 @@ function prettyPrintTree(tree) {
         }
     }
 
-    return linesWithConsolidatedCurlies.map((line) => ' '.repeat(line.indentation * 2) + line.value).join('\n');
+    return linesWithConsolidatedCurlies.map((line) => ' '.repeat(line.indentation * 4) + line.value).join('\n');
 }
 
 function increasesIndentation(token) {
@@ -354,12 +341,32 @@ function decreasesIndentation(token) {
     return token.type === 'closeParenthesis' || token.type === 'closeBracket';
 }
 
+function logError(message) {
+    const logArea = document.getElementById('logArea');
+    if (logArea) {
+        logArea.innerHTML += `<span class="errorMessage">${message}</span>`;
+    }
+}
+
+function prettyPrint(booleanExpression) {
+    const tokens = tokenize(booleanExpression);
+    const isValid = checkSanity(tokens);
+    if (!isValid) {
+        logError('Invalid expression.');
+        return false;
+    }
+
+    const tree = buildAbstractSyntaxTree(tokens);
+    return prettyPrintTree(tree);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const textArea = document.getElementById('inputArea');
     textArea.addEventListener('input', () => {
+        const logArea = document.getElementById('logArea');
+        logArea.innerHTML = '';
         const expression = textArea.value;
         const result = prettyPrint(expression);
-        //show result in outputarea
         const outputArea = document.getElementById('outputArea');
         outputArea.innerText = result;
     });
