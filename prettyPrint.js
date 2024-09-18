@@ -366,19 +366,19 @@ function prettyPrintTree(tree) {
             });
         } else if (node.type === 'openCurlyBrace') {
             lines.push({
-                indentation: node.subjectiveDepth, value: '{', type: node.type
+                indentation: node.subjectiveDepth, value: '<span class="curlyBrace">{</span>', type: node.type
             });
         } else if (node.type === 'closeCurlyBrace') {
             lines.push({
-                indentation: node.subjectiveDepth, value: '}', type: node.type
+                indentation: node.subjectiveDepth, value: '<span class="curlyBrace">}</span>', type: node.type
             });
         } else if (node.type === 'openBracket') {
             lines.push({
-                indentation: node.subjectiveDepth, value: '[', type: node.type
+                indentation: node.subjectiveDepth, value: '<span class="bracket">[</span>', type: node.type
             });
         } else if (node.type === 'closeBracket') {
             lines.push({
-                indentation: node.subjectiveDepth, value: ']', type: node.type
+                indentation: node.subjectiveDepth, value: '<span class="bracket">]</span>', type: node.type
             });
         } else {
             lines.push({
@@ -435,15 +435,20 @@ function prettyPrint(booleanExpression) {
 
 function logBasicInfo() {
     logInfo('Please enter a boolean expression in the input area.');
-    logInfo('Use parentheses () for grouping, brackets [] or curly braces {} lists/sets.');
+    logInfo('Use parentheses () for grouping, brackets [] for ranges or curly braces {} for sets.');
     logInfo('Supported keywords: ' + conjunction.join(', ') + ', ' + disjunction.join(', ') + ', ' + conditionalIf.join(', ') + ', ' + conditionalThen.join(', '));
     logWarning('The tool does not yet understand that conjunction {and, AND, und, ...} binds stronger than disjunction {or, OR, oder, ...}. Use parentheses to clarify.');
+}
+
+function loadExample() {
+    const example = "buy a cow and if that is not possible then (buy a goat or buy [1,3] chickens) and tell either one of {curly, larry, moe} about your adventure";
+    document.getElementById('inputArea').value = example;
+    document.getElementById('inputArea').dispatchEvent(new Event('input'));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('inputArea').focus();
     const textArea = document.getElementById('inputArea');
-    logBasicInfo();
     textArea.addEventListener('input', () => {
         const logArea = document.getElementById('logArea');
         logArea.innerHTML = '';
@@ -455,4 +460,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const outputArea = document.getElementById('outputArea');
         outputArea.innerHTML = result;
     });
+    loadExample();
+    logBasicInfo();
 });

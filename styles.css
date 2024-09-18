@@ -113,3 +113,15 @@ button:hover {
     letter-spacing: 2.0px;
     color: #2469ff;
 }
+
+.curlyBrace {
+    color: #ff00b3;
+    font-size: larger;
+    font-weight: bold;
+}
+
+.bracket {
+    color: #ff4b4b;
+    font-size: larger;
+    font-weight: bold;
+}
