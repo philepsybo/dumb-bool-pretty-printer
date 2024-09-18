@@ -115,13 +115,13 @@ button:hover {
 }
 
 .curlyBrace {
-    color: #ff00b3;
+    color: #00ec27;
     font-size: larger;
     font-weight: bold;
 }
 
 .bracket {
-    color: #ff4b4b;
+    color: #ff0000;
     font-size: larger;
     font-weight: bold;
 }

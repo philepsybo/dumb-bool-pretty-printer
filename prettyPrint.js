@@ -70,8 +70,6 @@ function filterOutEmptyParentheses(tokens) {
     const filteredTokens = [];
 
     for (let i = 0; i < tokens.length; i++) {
-        console.log(tokens[i]);
-        
         if (tokens[i].type === 'openParenthesis' && tokens[i + 1]?.type === 'closeParenthesis') {
             i++;
             continue;
@@ -136,7 +134,6 @@ function determineTokenType(token) {
 }
 
 function checkSanity(tokens) {
-    console.info('Checking for sanity of input...');
     const openParentheses = tokens.filter((token) => token.type === 'openParenthesis').length;
     const closeParentheses = tokens.filter((token) => token.type === 'closeParenthesis').length;
 
@@ -205,9 +202,8 @@ function checkSanity(tokens) {
                 return false;
             }
         } else if (stack.length > 0 && token.type !== 'literal') {
-            // eslint-disable-next-line no-template-curly-in-string
             logError(`Only literals are allowed between curly braces, found: ${token.type}`);
-            console.info(`...${tokens.slice(i - 2, i + 3).map((t) => t.value).join(' ')}...`);
+            logError(`...${tokens.slice(i - 2, i + 3).map((t) => t.value).join(' ')}...`);
             return false;
         }
     }
@@ -224,13 +220,11 @@ function checkSanity(tokens) {
                 return false;
             }
         } else if (stack.length > 0 && token.type !== 'literal') {
-            // eslint-disable-next-line no-template-curly-in-string
             logError(`Only literals are allowed between brackets, found: ${token.type}`);
-            console.info(`...${tokens.slice(i - 2, i + 3).map((t) => t.value).join(' ')}...`);
+            logError(`...${tokens.slice(i - 2, i + 3).map((t) => t.value).join(' ')}...`);
             return false;
         }
     }
-    console.info('All parentheses, brackets, curly braces and conditionals are balanced.');
 
     return true;
 }
@@ -394,12 +388,18 @@ function prettyPrintTree(tree) {
     for (let i = 1; i < lines.length; i++) {
         if (lines[i].type === 'openCurlyBrace' || lines[i].type === 'openBracket') {
             linesWithConsolidatedCurlies.pop();
+            let value = `${lines[i - 1].value} ${lines[i].value} ${lines[i + 1].value} ${lines[i + 2].value}`
+            let jump = 2;
+            if (lines[i + 3]?.type === 'literal') {
+                value += ` ${lines[i + 3].value}`;
+                jump++;
+            }
             linesWithConsolidatedCurlies.push({
                 indentation: lines[i - 1].indentation,
-                value: `${lines[i - 1].value} ${lines[i].value} ${lines[i + 1].value} ${lines[i + 2].value}`,
+                value,
                 type: 'mixedLiteral'
             });
-            i += 2;
+            i += jump;
         } else {
             linesWithConsolidatedCurlies.push(lines[i]);
         }
@@ -440,8 +440,13 @@ function logBasicInfo() {
     logWarning('The tool does not yet understand that conjunction {and, AND, und, ...} binds stronger than disjunction {or, OR, oder, ...}. Use parentheses to clarify.');
 }
 
+function clearLog() {
+    const logArea = document.getElementById('logArea');
+    logArea.innerHTML = '';
+}
+
 function loadExample() {
-    const example = "buy a cow and if that is not possible then (buy a goat or buy [1,3] chickens) and tell either one of {curly, larry, moe} about your adventure";
+    const example = "buy a cow and if that is not possible then (buy a goat or buy [1..3] chickens) and tell either one of {curly, larry, moe} about your adventure";
     document.getElementById('inputArea').value = example;
     document.getElementById('inputArea').dispatchEvent(new Event('input'));
 }
@@ -450,8 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('inputArea').focus();
     const textArea = document.getElementById('inputArea');
     textArea.addEventListener('input', () => {
-        const logArea = document.getElementById('logArea');
-        logArea.innerHTML = '';
+        clearLog();
         const expression = textArea.value;
         const result = prettyPrint(expression);
         if (result === "") {
@@ -461,5 +465,6 @@ document.addEventListener('DOMContentLoaded', () => {
         outputArea.innerHTML = result;
     });
     loadExample();
+    clearLog();
     logBasicInfo();
 });
