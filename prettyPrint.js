@@ -264,7 +264,10 @@ function buildAbstractSyntaxTree(tokens) {
                 if (child.type === 'conditionalIf') {
                     const condition = node.children[i + 1];
                     if (node.children[i + 2]?.type !== 'conditionalThen') {
-                        throw new Error('Expected conditionalThen after conditionalIf');
+                        logError('Expected conditionalThen after conditionalIf');
+                        logError('Error occured near: ' + node.children.slice(i - 1, i + 4).map((t) => t.value).join(' '));
+                        throw new Error("Invalid syntax");
+                        
                     }
                     const consequence = node.children[i + 3];
 
@@ -458,7 +461,12 @@ document.addEventListener('DOMContentLoaded', () => {
     textArea.addEventListener('input', () => {
         clearLog();
         const expression = textArea.value;
-        const result = prettyPrint(expression);
+        let result = "";
+        try {
+            result = prettyPrint(expression);            
+        } catch (error) {
+            logError(error.message);
+        }
         if (result === "") {
             logBasicInfo();
         }
