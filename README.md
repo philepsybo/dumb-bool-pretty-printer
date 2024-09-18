@@ -1,4 +1,4 @@
-# Pretty Dumb Pretty Printer for Boolean Expressions that can handle some Conditionals as well
+# Pretty Dumb Pretty Printer for Boolean Expressions that can handle some Conditionals as well (PDPPfBEtchsCaw)
 
 ## Usage
 
