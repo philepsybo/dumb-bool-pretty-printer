@@ -417,6 +417,9 @@ function prettyPrintTree(tree) {
 }
 
 function prettyPrint(booleanExpression) {
+    if (booleanExpression.trim() === "") {
+        return "";
+    }
     logInfo('Attempt tokenization of input...');
     const tokens = tokenize(booleanExpression);
     if (tokens.length === 0) {
