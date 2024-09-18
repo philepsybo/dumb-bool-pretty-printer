@@ -125,3 +125,11 @@ button:hover {
     font-size: larger;
     font-weight: bold;
 }
+
+.license {
+    padding-left: 1rem;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: center;
+    margin-top: 2rem;
+}
