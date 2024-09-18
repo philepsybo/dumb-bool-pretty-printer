@@ -9,7 +9,7 @@ body {
 }
 
 header {
-    background-color: #4CAF50;
+    background-color: #7369ff;
     color: white;
     padding: 0.3rem;
     text-align: center;
@@ -26,27 +26,12 @@ main {
     gap: 1rem;
 }
 
-.logContainer {
-    grid-column: 1 / 3;
-    grid-row: 1 / 2;
-}
-
-.inputContainer {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
-}
-
-.outputContainer {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-}
-
 #logArea {
     background-color: #f4f4f4;
     padding: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
-    height: 100px;
+    min-height: 40px;
     overflow-y: auto;
 }
 
@@ -95,4 +80,36 @@ button:hover {
 
 .errorMessage {
     color: red;
+}
+
+.warningMessage {
+    color: orange;
+}
+
+.logContainer {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+}
+
+.logMessage {
+    margin: 0;
+    //smaller font
+    font-size: 0.9rem;
+}
+
+.inputContainer {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+.outputContainer {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+.keyword {
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: 2.0px;
+    color: #2469ff;
 }

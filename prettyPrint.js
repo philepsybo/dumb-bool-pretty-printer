@@ -21,6 +21,8 @@ const conditionalIf = [
     'IF',
     'falls',
     'FALLS',
+    'wenn',
+    'WENN',
 ];
 
 const conditionalThen = [
@@ -321,14 +323,21 @@ function decreasesIndentation(token) {
 function logError(message) {
     const logArea = document.getElementById('logArea');
     if (logArea) {
-        logArea.innerHTML += `<p class="errorMessage">${message}</p>`;
+        logArea.innerHTML += `<p class="logMessage errorMessage">${message}</p>`;
     }
 }
 
 function logInfo(message) {
     const logArea = document.getElementById('logArea');
     if (logArea) {
-        logArea.innerHTML += `<p class="infoMessage">${message}</p>`;
+        logArea.innerHTML += `<p class="logMessage infoMessage">${message}</p>`;
+    }
+}
+
+function logWarning(message) {
+    const logArea = document.getElementById('logArea');
+    if (logArea) {
+        logArea.innerHTML += `<p class="logMessage warningMessage">${message}</p>`;
     }
 }
 
@@ -340,20 +349,20 @@ function prettyPrintTree(tree) {
             node.children.forEach(walk);
         } else if (node.type === 'conditional') {
             lines.push({
-                indentation: node.subjectiveDepth, value: 'IF', type: node.type
+                indentation: node.subjectiveDepth, value: '<span class="keyword">IF</span>', type: node.type
             });
             walk(node.condition);
             lines.push({
-                indentation: node.subjectiveDepth, value: 'THEN', type: node.type
+                indentation: node.subjectiveDepth, value: '<span class="keyword">THEN</span>', type: node.type
             });
             walk(node.consequence);
         } else if (node.type === 'conjunction') {
             lines.push({
-                indentation: node.subjectiveDepth, value: 'AND', type: node.type
+                indentation: node.subjectiveDepth, value: '<span class="keyword">AND</span>', type: node.type
             });
         } else if (node.type === 'disjunction') {
             lines.push({
-                indentation: node.subjectiveDepth, value: 'OR', type: node.type
+                indentation: node.subjectiveDepth, value: '<span class="keyword">OR</span>', type: node.type
             });
         } else if (node.type === 'openCurlyBrace') {
             lines.push({
@@ -404,31 +413,46 @@ function prettyPrintTree(tree) {
 }
 
 function prettyPrint(booleanExpression) {
+    logInfo('Attempt tokenization of input...');
     const tokens = tokenize(booleanExpression);
-    console.log("le tokens", tokens);
-    
     if (tokens.length === 0) {
         logInfo('No meaningful tokens found.');
         return "";
     }
+
+    logInfo(`Found ${tokens.length} meaningful tokens. Checking for sanity of input...`);
+
     const isValid = checkSanity(tokens);
     if (!isValid) {
-        logError('Invalid expression.');
+        logError('Sanity check failed. Invalid expression.');
         return "";
     }
-
+    logInfo('Sanity check passed. Attempt building abstract syntax tree...');
     const tree = buildAbstractSyntaxTree(tokens);
+    logInfo('Abstract syntax tree built successfully. Attempt pretty printing...');
     return prettyPrintTree(tree);
 }
 
+function logBasicInfo() {
+    logInfo('Please enter a boolean expression in the input area.');
+    logInfo('Use parentheses () for grouping, brackets [] or curly braces {} lists/sets.');
+    logInfo('Supported keywords: ' + conjunction.join(', ') + ', ' + disjunction.join(', ') + ', ' + conditionalIf.join(', ') + ', ' + conditionalThen.join(', '));
+    logWarning('The tool does not yet understand that conjunction {and, AND, und, ...} binds stronger than disjunction {or, OR, oder, ...}. Use parentheses to clarify.');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('inputArea').focus();
     const textArea = document.getElementById('inputArea');
+    logBasicInfo();
     textArea.addEventListener('input', () => {
         const logArea = document.getElementById('logArea');
         logArea.innerHTML = '';
         const expression = textArea.value;
         const result = prettyPrint(expression);
+        if (result === "") {
+            logBasicInfo();
+        }
         const outputArea = document.getElementById('outputArea');
-        outputArea.innerText = result;
+        outputArea.innerHTML = result;
     });
 });
