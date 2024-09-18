@@ -30,6 +30,7 @@ const conditionalThen = [
     'THEN',
     'dann',
     'DANN',
+    '=>',
 ];
 
 function tokenize(expression) {
