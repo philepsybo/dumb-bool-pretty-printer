@@ -5,7 +5,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>Pretty Print</title>
+    <script type="importmap">
+        {
+            "imports": {
+                "logging": "./src/logger.js",
+                "logger": "./src/logger.js",
+                "log": "./src/logger.js",
+                "tokenizer": "./src/tokenizer.js",
+                "language": "./src/language.js",
+                "parser": "./src/parser.js",
+                "sanitizer": "./src/sanitizer.js",
+                "transformer": "./src/transformer.js"
+            }
+        }
+    </script>
+    <title>BEtchsCaw</title>
+    <meta name="description" content="Simple Pretty Printer for Boolean Expressions that can handle some Conditionals as well; can handle most common english and german keywords so far.">
+    <meta name="keywords" content="Boolean, Expression, Pretty, Printer, Conditionals, English, German, Keywords">
+    <script type="module" src="index.js" defer></script>
 </head>
 
 <body>
@@ -30,7 +47,6 @@
             <pre id="outputArea"></pre>
         </div>
     </main>
-    <script src="prettyPrint.js"></script>
 </body>
 
 </html>
