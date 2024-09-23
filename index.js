@@ -2,13 +2,15 @@ import { logError, logInfo, logBasicInfo, clearLog } from "logger";
 import { tokenize } from "tokenizer";
 import { buildAbstractSyntaxTree } from "parser";
 import { checkSanity } from "sanitizer";
-import { prettyPrintTree } from "transformer";
+import { asContentForHtmlPreElement } from "transformer";
 
 function prettyPrint(booleanExpression) {
     if (booleanExpression.trim() === "") {
         return "";
     }
+
     logInfo('Attempt tokenization of input...');
+
     const tokens = tokenize(booleanExpression);
     if (tokens.length === 0) {
         logInfo('No meaningful tokens found.');
@@ -22,10 +24,14 @@ function prettyPrint(booleanExpression) {
         logError('Sanity check failed. Invalid expression.');
         return "";
     }
+
     logInfo('Sanity check passed. Attempt building abstract syntax tree...');
+
     const tree = buildAbstractSyntaxTree(tokens);
+
     logInfo('Abstract syntax tree built successfully. Attempt pretty printing...');
-    return prettyPrintTree(tree);
+
+    return asContentForHtmlPreElement(tree);
 }
 
 function loadExample() {

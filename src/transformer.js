@@ -1,4 +1,4 @@
-export function prettyPrintTree(tree) {
+export function asContentForHtmlPreElement(tree) {
     const lines = [];
 
     const walk = (node) => {
