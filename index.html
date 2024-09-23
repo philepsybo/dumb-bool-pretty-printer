@@ -5,7 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "logging": "./src/logger.js",
+                "logger": "./src/logger.js",
+                "log": "./src/logger.js",
+                "tokenizer": "./src/tokenizer.js",
+                "language": "./src/language.js"
+            }
+        }
+    </script>
     <title>Pretty Print</title>
+    <script type="module" src="prettyPrint.js" defer></script>
 </head>
 
 <body>
@@ -30,7 +42,6 @@
             <pre id="outputArea"></pre>
         </div>
     </main>
-    <script src="prettyPrint.js"></script>
 </body>
 
 </html>

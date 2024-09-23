@@ -1,139 +1,6 @@
-const conjunction = [
-    'and',
-    '&&',
-    '∧',
-    'AND',
-    'und',
-    'UND',
-];
-
-const disjunction = [
-    'or',
-    '||',
-    '∨',
-    'OR',
-    'oder',
-    'ODER',
-];
-
-const conditionalIf = [
-    'if',
-    'IF',
-    'falls',
-    'FALLS',
-    'wenn',
-    'WENN',
-];
-
-const conditionalThen = [
-    'then',
-    'THEN',
-    'dann',
-    'DANN',
-    '=>',
-];
-
-function tokenize(expression) {
-    const regex = /(\s+|[(){}\[\]])/;
-    const tokens = expression.split(regex).filter((token) => token.trim() !== '');
-
-    let result = [];
-    let currentLiteral = '';
-    for (const token of tokens) {
-        const type = determineTokenType(token);
-
-        if (type === 'literal') {
-            currentLiteral += `${token} `;
-        } else {
-            if (currentLiteral) {
-                result.push({ type: 'literal', value: currentLiteral.trim() });
-                currentLiteral = '';
-            }
-            result.push({ type, value: token });
-        }
-    }
-    if (currentLiteral) {
-        result.push({ type: 'literal', value: currentLiteral.trim() });
-    }
-
-    //repeat the filtering until no changes are made anymore
-    let previousLength = -1;
-    while (result.length !== previousLength) {
-        previousLength = result.length;
-        result = filterOutEmptyParentheses(result);
-        result = filterOutParenthesesWithOnlyLiterals(result);
-    }
-
-    return result;
-}
-
-function filterOutEmptyParentheses(tokens) {
-    const filteredTokens = [];
-
-    for (let i = 0; i < tokens.length; i++) {
-        if (tokens[i].type === 'openParenthesis' && tokens[i + 1]?.type === 'closeParenthesis') {
-            i++;
-            continue;
-        }
-
-        filteredTokens.push(tokens[i]);
-    }
-
-    return filteredTokens;
-}
-
-function filterOutParenthesesWithOnlyLiterals(tokens) {
-    const filteredTokens = [];
-
-    for (let i = 0; i < tokens.length; i++) {
-        const token = tokens[i];
-
-        if (token.type === 'openParenthesis' && tokens[i + 1]?.type === 'literal' && tokens[i + 2]?.type === 'closeParenthesis') {
-            filteredTokens.push(tokens[i + 1]);
-            i += 2;
-            continue;
-        } else {
-            filteredTokens.push(token);
-        }
-    }
-
-    return filteredTokens;
-}
-
-function determineTokenType(token) {
-    if (conjunction.includes(token)) {
-        return 'conjunction';
-    }
-    if (disjunction.includes(token)) {
-        return 'disjunction';
-    }
-    if (conditionalIf.includes(token)) {
-        return 'conditionalIf';
-    }
-    if (conditionalThen.includes(token)) {
-        return 'conditionalThen';
-    }
-    if (token === '(') {
-        return 'openParenthesis';
-    }
-    if (token === ')') {
-        return 'closeParenthesis';
-    }
-    if (token === '[') {
-        return 'openBracket';
-    }
-    if (token === ']') {
-        return 'closeBracket';
-    }
-    if (token === '{') {
-        return 'openCurlyBrace';
-    }
-    if (token === '}') {
-        return 'closeCurlyBrace';
-    }
-    return 'literal';
-}
-
+import { logError, logWarning, logInfo } from "logging";
+import { tokenize } from "tokenizer";
+import { conjunction, disjunction, conditionalIf, conditionalThen } from "language";
 function checkSanity(tokens) {
     const openParentheses = tokens.filter((token) => token.type === 'openParenthesis').length;
     const closeParentheses = tokens.filter((token) => token.type === 'closeParenthesis').length;
@@ -267,7 +134,7 @@ function buildAbstractSyntaxTree(tokens) {
                         logError('Expected conditionalThen after conditionalIf');
                         logError('Error occured near: ' + node.children.slice(i - 1, i + 4).map((t) => t.value).join(' '));
                         throw new Error("Invalid syntax");
-                        
+
                     }
                     const consequence = node.children[i + 3];
 
@@ -316,27 +183,6 @@ function increasesIndentation(token) {
 
 function decreasesIndentation(token) {
     return token.type === 'closeParenthesis' || token.type === 'closeBracket';
-}
-
-function logError(message) {
-    const logArea = document.getElementById('logArea');
-    if (logArea) {
-        logArea.innerHTML += `<p class="logMessage errorMessage">${message}</p>`;
-    }
-}
-
-function logInfo(message) {
-    const logArea = document.getElementById('logArea');
-    if (logArea) {
-        logArea.innerHTML += `<p class="logMessage infoMessage">${message}</p>`;
-    }
-}
-
-function logWarning(message) {
-    const logArea = document.getElementById('logArea');
-    if (logArea) {
-        logArea.innerHTML += `<p class="logMessage warningMessage">${message}</p>`;
-    }
 }
 
 function prettyPrintTree(tree) {
@@ -466,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const expression = textArea.value;
         let result = "";
         try {
-            result = prettyPrint(expression);            
+            result = prettyPrint(expression);
         } catch (error) {
             logError(error.message);
         }
