@@ -19,10 +19,30 @@ main {
     padding: 2rem;
 }
 
+label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+button {
+    background-color: #7369ff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+button:hover {
+    background-color: #5c4fc7;
+}
+
 #content {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto 1fr;
     gap: 1rem;
 }
 
@@ -60,24 +80,8 @@ main {
     height: auto;
 }
 
-label {
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-button:hover {
-    background-color: #45a049;
+.button-small {
+    padding: 0.3rem 0.5rem;
 }
 
 .errorMessage {
@@ -95,18 +99,32 @@ button:hover {
 
 .logMessage {
     margin: 0;
-    //smaller font
     font-size: 0.9rem;
+}
+
+.downloadContainer {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.fileNameContainer {
+    display: flex;
+    flex-direction: row;
+    margin-right: 1rem;
+    align-items: center;
 }
 
 .inputContainer {
     grid-column: 1 / 2;
-    grid-row: 2 / 3;
+    grid-row: 3 / 4;
 }
 
 .outputContainer {
     grid-column: 2 / 3;
-    grid-row: 2 / 3;
+    grid-row: 3 / 4;
 }
 
 .keyword {
@@ -134,4 +152,10 @@ button:hover {
     color: #666;
     text-align: center;
     margin-top: 2rem;
+}
+
+.label-small {
+    font-size: 0.8rem;
+    margin: 0;
+    margin-right: 0.5rem;
 }
