@@ -2,7 +2,7 @@ import { logError, logInfo, logBasicInfo, clearLog } from "logger";
 import { tokenize } from "tokenizer";
 import { buildAbstractSyntaxTree } from "parser";
 import { checkSanity } from "sanitizer";
-import { asContentForHtmlPreElement } from "transformer";
+import { asContentForHtmlPreElement, asIndentedMarkdown } from "transformer";
 
 function prettyPrint(booleanExpression) {
     if (booleanExpression.trim() === "") {
@@ -34,16 +34,34 @@ function prettyPrint(booleanExpression) {
     return asContentForHtmlPreElement(tree);
 }
 
+function downloadMarkdown() {
+    const inputArea = document.getElementById('inputArea');
+    const expression = inputArea.value;
+    const prettyPrinted = prettyPrint(expression);
+    if (prettyPrinted === "") {
+        logError('Failed to download. Invalid or empty expression.');
+        return;
+    }
+    const blob = new Blob([asIndentedMarkdown(buildAbstractSyntaxTree(tokenize(expression)))]);
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const filename = document.getElementById('downloadFilename').value;
+    a.download = filename === "" ? 'pretty-print-bool.md' : `${filename}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
+}
+
 function loadExample() {
     const example = "buy a cow and if that is not possible then (buy a goat or buy [1..3] chickens) and tell either one of {curly, larry, moe} about your adventure";
     document.getElementById('inputArea').value = example;
     document.getElementById('inputArea').dispatchEvent(new Event('input'));
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('inputArea').focus();
-    const textArea = document.getElementById('inputArea');
-    textArea.addEventListener('input', () => {
+function updatePrettyPrintArea(textArea) {
+    return () => {
         clearLog();
         const expression = textArea.value;
         let result = "";
@@ -57,7 +75,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         const outputArea = document.getElementById('outputArea');
         outputArea.innerHTML = result;
-    });
+    };
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('downloadAsMarkdownButton').addEventListener('click', (downloadMarkdown));
+
+    const textArea = document.getElementById('inputArea');
+    textArea.focus();
+    textArea.select();
+    textArea.addEventListener('input', updatePrettyPrintArea(textArea));
     loadExample();
     clearLog();
     logBasicInfo();

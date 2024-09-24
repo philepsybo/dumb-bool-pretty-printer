@@ -1,7 +1,4 @@
-export function asContentForHtmlPreElement(tree) {
-    let lines = getRawLinesWithIndentationWithoutParentheses(tree);
-    lines = wrapLineValuesWithHtmlSpans(lines);
-
+function consolidateCurlies(lines) {
     const linesWithConsolidatedCurlies = [];
     linesWithConsolidatedCurlies[0] = lines[0];
     for (let i = 1; i < lines.length; i++) {
@@ -23,12 +20,33 @@ export function asContentForHtmlPreElement(tree) {
             linesWithConsolidatedCurlies.push(lines[i]);
         }
     }
+    return linesWithConsolidatedCurlies;
+}
+
+export function asContentForHtmlPreElement(tree) {
+    let lines = getRawLinesWithIndentationWithoutParentheses(tree);
+    lines = wrapLineValuesWithHtmlSpans(lines);
+
+    const linesWithConsolidatedCurlies = consolidateCurlies(lines);
 
     if (linesWithConsolidatedCurlies.length === 0) {
         return '';
     }
 
     return linesWithConsolidatedCurlies.map((line) => ' '.repeat(line.indentation * 4) + line.value).join('\n');
+}
+
+export function asIndentedMarkdown(tree) {
+    let lines = getRawLinesWithIndentationWithoutParentheses(tree);
+    lines = wrapLineValuesWithMarkdownEmphasis(lines);
+
+    const linesWithConsolidatedCurlies = consolidateCurlies(lines);
+
+    if (linesWithConsolidatedCurlies.length === 0) {
+        return '';
+    }
+
+    return linesWithConsolidatedCurlies.map((line) => ' '.repeat(line.indentation * 2) + '* ' + line.value).join('\n');
 }
 
 function getRawLinesWithIndentationWithoutParentheses(tree) {
@@ -108,6 +126,29 @@ function wrapLineValuesWithHtmlSpans(lines) {
             case 'openBracket':
             case 'closeBracket':
                 element.value = `<span class="bracket">${line.value}</span>`;
+                break;
+            default:
+                break;
+        }
+    }
+
+    return lines;
+}
+
+function wrapLineValuesWithMarkdownEmphasis(lines) {
+    for(const element of lines) {
+        const line = element;
+        switch (line.type) {
+            case 'conditional':
+            case 'conjunction':
+            case 'disjunction':
+                element.value = `**${line.value}**`;
+                break;
+            case 'openCurlyBrace':
+            case 'closeCurlyBrace':
+            case 'openBracket':
+            case 'closeBracket':
+                element.value = `*${line.value}*`;
                 break;
             default:
                 break;
