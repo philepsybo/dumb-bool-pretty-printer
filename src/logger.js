@@ -21,6 +21,13 @@ export function logWarning(message) {
     }
 }
 
+export function logSuccess(message) {
+    const logArea = document.getElementById('logArea');
+    if (logArea) {
+        logArea.innerHTML += `<p class="logMessage successMessage">${message}</p>`;
+    }
+}
+
 export function logBasicInfo() {
     logInfo('Please enter a boolean expression in the input area.');
     logInfo('Use parentheses () for grouping, brackets [] for ranges or curly braces {} for sets.');

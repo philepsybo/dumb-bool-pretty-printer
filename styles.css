@@ -12,6 +12,7 @@
     --primary-color: #2d9246;
     --primary-color-darker: #5f55e6;
     --secondary-color: white;
+    --success-color: rgb(0, 175, 0);
     --text-color: #333;
     --text-color-complement: white;
     --text-color-output: #333;
@@ -127,6 +128,10 @@ body {
 
 .warningMessage {
     color: var(--warning-color)
+}
+
+.successMessage {
+    color: var(--success-color)
 }
 
 .logContainer {

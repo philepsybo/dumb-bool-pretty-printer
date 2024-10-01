@@ -1,4 +1,4 @@
-import { logError, logInfo, logBasicInfo, clearLog } from "logger";
+import { logError, logInfo, logSuccess, logBasicInfo, clearLog } from "logger";
 import { tokenize } from "tokenizer";
 import { buildAbstractSyntaxTree } from "parser";
 import { checkSanity } from "sanitizer";
@@ -21,7 +21,8 @@ function prettyPrint(booleanExpression) {
 
     const isValid = checkSanity(tokens);
     if (!isValid) {
-        logError('Sanity check failed. Invalid expression.');
+        throw new Error("Sanity check failed. Invalid expression.");
+        
         return "";
     }
 
@@ -60,6 +61,11 @@ function loadExample() {
     document.getElementById('inputArea').dispatchEvent(new Event('input'));
 }
 
+function logMessageToOutputArea(message) {
+    const outputArea = document.getElementById('outputArea');
+    outputArea.innerHTML = message;
+}
+
 function updatePrettyPrintArea(textArea) {
     return () => {
         clearLog();
@@ -67,8 +73,11 @@ function updatePrettyPrintArea(textArea) {
         let result = "";
         try {
             result = prettyPrint(expression);
+            logSuccess('Pretty printed successfully.');
         } catch (error) {
             logError(error.message);
+            logMessageToOutputArea("Could not pretty print. Please refer to the log for trouble-shooting.");
+            return;
         }
         if (result === "") {
             logBasicInfo();
