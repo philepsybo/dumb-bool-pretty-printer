@@ -1,15 +1,29 @@
 :root {
-    --padding-left-right: 0.7rem;
-    --grid-row-gap: 0.2rem;
+    --background-color: #ffffff;
+    --background-color-output: #f8f8f8;
+    --border-color: #a7a7a7;
+    --bracket-color: #ff0000;
     --button-input-padding: 0.1rem 0.5rem;
+    --curly-brace-color: #00ec27;
+    --error-color: red;
+    --grid-row-gap: 0.4rem;
+    --keyword-color: #2469ff;
+    --padding-left-right: 0.9rem;
+    --primary-color: #2d9246;
+    --primary-color-darker: #5f55e6;
+    --secondary-color: white;
+    --text-color: #333;
+    --text-color-complement: white;
+    --text-color-output: #333;
+    --warning-color: rgb(255, 102, 0);
 }
 
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 .label {
@@ -17,8 +31,8 @@ body {
 }
 
 .button {
-    background-color: #7369ff;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-color-complement);
     border: none;
     padding: var(--button-input-padding);
     cursor: pointer;
@@ -33,13 +47,13 @@ body {
 }
 
 .button:hover {
-    background-color: #5c4fc7;
+    background-color: var(--primary-color-darker);
 }
 
 .logArea {
-    background-color: #f4f4f4;
+    background-color: var(--background-color);
     padding: 1rem;
-    border: 1px solid #ccc;
+    border: 2px dashed var(--border-color);
     min-height: 40px;
     overflow-y: auto;
 }
@@ -48,7 +62,7 @@ body {
     box-sizing: border-box;
     padding: 5px 10px;
     margin: 0;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     font-size: 1rem;
     width: 100%;
     min-height: 500px;
@@ -60,17 +74,19 @@ body {
     box-sizing: border-box;
     padding: 5px 10px;
     margin: 0;
-    border: 1px solid #ccc;
-    background-color: #fff;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color-output);
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
     min-height: 500px;
     min-width: 200px;
     height: auto;
 }
 
 .header {
-    background-color: #7369ff;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--text-color-complement);
     padding: 3px var(--padding-left-right);
+    padding-top: 10px;
     text-align: center;
 }
 
@@ -106,11 +122,11 @@ body {
 }
 
 .errorMessage {
-    color: red;
+    color: var(--error-color)
 }
 
 .warningMessage {
-    color: orange;
+    color: var(--warning-color)
 }
 
 .logContainer {
@@ -170,17 +186,17 @@ body {
     font-weight: bold;
     font-style: italic;
     letter-spacing: 2.0px;
-    color: #2469ff;
+    color: var(--keyword-color);
 }
 
 .curlyBrace {
-    color: #00ec27;
+    color: var(--curly-brace-color);
     font-size: larger;
     font-weight: bold;
 }
 
 .bracket {
-    color: #ff0000;
+    color: var(--bracket-color);
     font-size: larger;
     font-weight: bold;
 }
@@ -188,13 +204,13 @@ body {
 .license {
     padding-left: 1rem;
     font-size: 0.8rem;
-    color: white;
+    color: var(--text-color-complement);
     text-align: center;
     margin-top: 2rem;
 }
 
 .license > a {
-    color: white;
+    color: var(--text-color-complement);
 }
 
 .label-small {
