@@ -38,19 +38,22 @@
         <div class="logContainer">
             <div id="logArea" class="logArea"></div>
         </div>
-        <div class="downloadContainer">
-            <div class="fileNameContainer">
-                <label class="label label-small" for="downloadFilename">File-Name:</label>
-                <input type="text" id="downloadFilename">
-            </div>
-            <button class="downloadMarkdownButton button button-small" id="downloadAsMarkdownButton" type="button">Download as Markdown</button>
-        </div>
         <div class="inputContainer">
-            <label for="inputArea" class="label">Input</label>
+            <label for="inputArea" class="label areaLabel inputLabel">Input</label>
             <textarea id="inputArea" class="inputArea"></textarea>
         </div>
         <div class="outputContainer">
-            <label for="outputArea" class="label">Output</label>
+            <div class="outputContainer_header">
+                <label for="outputArea" class="label areaLabel">Output</label>
+                <div class="downloadContainer">
+                    <div class="fileNameContainer">
+                        <label class="label label-small" for="downloadFilename">File-Name:</label>
+                        <input type="text" id="downloadFilename" class="input">
+                    </div>
+                    <button class="downloadMarkdownButton button button-small" id="downloadAsMarkdownButton" type="button">Download as
+                        Markdown</button>
+                </div>
+            </div>
             <pre id="outputArea" class="outputArea"></pre>
         </div>
     </main>
