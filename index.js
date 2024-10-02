@@ -1,7 +1,7 @@
 import {clearLog, logBasicInfo, logError, logInfo, logSuccess} from "logger";
 import {tokenize} from "tokenizer";
 import {buildAbstractSyntaxTree} from "parser";
-import {checkValidity} from "validator";
+import {Validator} from "validator";
 import {asContentForHtmlPreElement, asIndentedMarkdown} from "transformer";
 
 function prettyPrint(booleanExpression) {
@@ -19,7 +19,8 @@ function prettyPrint(booleanExpression) {
 
     logInfo(`Found ${tokens.length} meaningful tokens. Checking for sanity of input...`);
 
-    const isValid = checkValidity(tokens);
+    const validator = new Validator(tokens);
+    const isValid = validator.checkValidity();
     if (!isValid) {
         throw new Error("Sanity check failed. Invalid expression.");
 
