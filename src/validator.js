@@ -1,6 +1,6 @@
 import { logError } from 'logger';
 
-export function checkSanity(tokens) {
+export function checkValidity(tokens) {
     const parentheses = tokens.filter((token) => token.type === 'openParenthesis' || token.type === 'closeParenthesis');
     const brackets = tokens.filter((token) => token.type === 'openBracket' || token.type === 'closeBracket');
     const curlyBraces = tokens.filter((token) => token.type === 'openCurlyBrace' || token.type === 'closeCurlyBrace');

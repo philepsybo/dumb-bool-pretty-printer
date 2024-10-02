@@ -1,8 +1,8 @@
-import { logError, logInfo, logSuccess, logBasicInfo, clearLog } from "logger";
-import { tokenize } from "tokenizer";
-import { buildAbstractSyntaxTree } from "parser";
-import { checkSanity } from "sanitizer";
-import { asContentForHtmlPreElement, asIndentedMarkdown } from "transformer";
+import {clearLog, logBasicInfo, logError, logInfo, logSuccess} from "logger";
+import {tokenize} from "tokenizer";
+import {buildAbstractSyntaxTree} from "parser";
+import {checkValidity} from "validator";
+import {asContentForHtmlPreElement, asIndentedMarkdown} from "transformer";
 
 function prettyPrint(booleanExpression) {
     if (booleanExpression.trim() === "") {
@@ -19,10 +19,10 @@ function prettyPrint(booleanExpression) {
 
     logInfo(`Found ${tokens.length} meaningful tokens. Checking for sanity of input...`);
 
-    const isValid = checkSanity(tokens);
+    const isValid = checkValidity(tokens);
     if (!isValid) {
         throw new Error("Sanity check failed. Invalid expression.");
-        
+
         return "";
     }
 
