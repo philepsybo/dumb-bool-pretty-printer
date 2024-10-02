@@ -37,7 +37,7 @@ function prettyPrint(booleanExpression) {
 }
 
 function downloadMarkdown() {
-    const inputArea = document.getElementById('inputArea');
+    const inputArea = document.getElementById('inputArea_textArea');
     const expression = inputArea.value;
     const prettyPrinted = prettyPrint(expression);
     if (prettyPrinted === "") {
@@ -58,8 +58,8 @@ function downloadMarkdown() {
 
 function loadExample() {
     const example = "buy a cow and if that is not possible then (buy a goat or buy [1..3] chickens) and tell either one of {curly, larry, moe} about your adventure";
-    document.getElementById('inputArea').value = example;
-    document.getElementById('inputArea').dispatchEvent(new Event('input'));
+    document.getElementById('inputArea_textArea').value = example;
+    document.getElementById('inputArea_textArea').dispatchEvent(new Event('input'));
 }
 
 function logMessageToOutputArea(message) {
@@ -68,33 +68,39 @@ function logMessageToOutputArea(message) {
 }
 
 function updatePrettyPrintArea(textArea) {
-    return () => {
-        clearLog();
-        const expression = textArea.value;
-        let result = "";
-        try {
-            result = prettyPrint(expression);
-            logSuccess('Pretty printed successfully.');
-        } catch (error) {
-            logError(error.message);
-            logMessageToOutputArea("Could not pretty print. Please refer to the log for trouble-shooting.");
-            return;
-        }
-        if (result === "") {
-            logBasicInfo();
-        }
-        const outputArea = document.getElementById('outputArea');
-        outputArea.innerHTML = result;
-    };
+    clearLog();
+    const expression = textArea.value;
+    let result = "";
+    try {
+        result = prettyPrint(expression);
+        logSuccess('Pretty printed successfully.');
+    } catch (error) {
+        logError(error.message);
+        logMessageToOutputArea("Could not pretty print. Please refer to the log for trouble-shooting.");
+        return;
+    }
+    if (result === "") {
+        logBasicInfo();
+    }
+    const outputArea = document.getElementById('outputArea');
+    outputArea.innerHTML = result;
+}
+
+function updateInputOverlay(inputOverlay, newInput) {
+    inputOverlay.innerHTML = newInput;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('downloadAsMarkdownButton').addEventListener('click', (downloadMarkdown));
 
-    const textArea = document.getElementById('inputArea');
+    const textArea = document.getElementById('inputArea_textArea');
+    const inputOverlay = document.getElementById('inputArea_overlay');
     textArea.focus();
     textArea.select();
-    textArea.addEventListener('input', updatePrettyPrintArea(textArea));
+    textArea.addEventListener('input', () => {
+        updateInputOverlay(inputOverlay, textArea.value);
+        updatePrettyPrintArea(textArea);
+    });
     loadExample();
     clearLog();
     logBasicInfo();

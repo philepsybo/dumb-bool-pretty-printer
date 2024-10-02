@@ -27,6 +27,13 @@ body {
     color: var(--text-color);
 }
 
+textarea {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
 .label {
     font-weight: bold;
 }
@@ -60,15 +67,37 @@ body {
 }
 
 .inputArea {
+    position: relative;
     box-sizing: border-box;
-    padding: 5px 10px;
     margin: 0;
-    border: 1px solid var(--border-color);
-    font-size: 1rem;
     width: 100%;
     min-height: 500px;
     min-width: 200px;
     height: auto;
+    border: 1px solid var(--border-color);
+}
+
+.inputArea_textArea {
+    font-size: 1rem;
+    font-family: Arial, sans-serif;
+    padding: 5px 10px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    margin: 0;
+}
+
+.inputArea_overlay {
+    font-size: 1rem;
+    font-family: Arial, sans-serif;
+    padding: 5px 10px;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
 }
 
 .outputArea {
@@ -222,4 +251,8 @@ body {
     font-size: 0.8rem;
     margin: 0;
     margin-right: 0.5rem;
+}
+
+.inputOverlay {
+    background-color: red;
 }
