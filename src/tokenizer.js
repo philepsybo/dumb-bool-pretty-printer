@@ -1,5 +1,32 @@
 import { conjunction, disjunction, conditionalIf, conditionalThen } from 'language';
 
+export function simpleTokenize(expression) {
+    const regex = /(\s+|[(){}\[\]])/;
+    const bareTokens = expression.split(regex);
+
+    let tokens = [];
+    let currentLiteral = '';
+    for (const token of bareTokens) {
+        const type = determineTokenType(token);
+
+        if (type === 'literal') {
+            currentLiteral += `${token} `;
+        } else {
+            if (currentLiteral) {
+                tokens.push({ type: 'literal', value: currentLiteral.trim() });
+                currentLiteral = '';
+            }
+            tokens.push({ type, value: token });
+        }
+    }
+
+    if (currentLiteral) {
+        tokens.push({ type: 'literal', value: currentLiteral.trim() });
+    }
+
+    return tokens;
+}
+
 export function tokenize(expression) {
     const regex = /(\s+|[(){}\[\]])/;
     const tokens = expression.split(regex).filter((token) => token.trim() !== '');
@@ -19,11 +46,11 @@ export function tokenize(expression) {
             result.push({ type, value: token });
         }
     }
+
     if (currentLiteral) {
         result.push({ type: 'literal', value: currentLiteral.trim() });
     }
 
-    //repeat the filtering until no changes are made anymore
     let previousLength = -1;
     while (result.length !== previousLength) {
         previousLength = result.length;
@@ -96,6 +123,9 @@ function determineTokenType(token) {
     }
     if (token === '}') {
         return 'closeCurlyBrace';
+    }
+    if (token.trim() === '') {
+        return 'whitespace';
     }
     return 'literal';
 }

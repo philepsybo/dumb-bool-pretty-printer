@@ -3,6 +3,7 @@ import {tokenize} from "tokenizer";
 import {buildAbstractSyntaxTree} from "parser";
 import {Validator} from "validator";
 import {asContentForHtmlPreElement, asIndentedMarkdown} from "transformer";
+import {augmentInput} from "inputAugmentor";
 
 function prettyPrint(booleanExpression) {
     if (booleanExpression.trim() === "") {
@@ -87,7 +88,7 @@ function updatePrettyPrintArea(textArea) {
 }
 
 function updateInputOverlay(inputOverlay, newInput) {
-    inputOverlay.innerHTML = newInput;
+    inputOverlay.innerHTML = augmentInput(newInput);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

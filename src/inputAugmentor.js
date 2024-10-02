@@ -1,10 +1,9 @@
-import {tokenize} from "tokenizer";
-import {conjunction, disjunction, conditionalIf, conditionalThen} from "language";
+import {simpleTokenize} from "tokenizer";
+import {conditionalIf, conditionalThen, conjunction, disjunction} from "language";
 
 export function augmentInput(input) {
-    const tokens = tokenize(input);
+    const tokens = simpleTokenize(input);
     const augmentedTokens = [];
-    //wrap all keyword-tokens in span-elements with class keyword
     for (const token of tokens) {
         if (
             conjunction.includes(token.value)
@@ -12,11 +11,13 @@ export function augmentInput(input) {
             || conditionalIf.includes(token.value)
             || conditionalThen.includes(token.value)
         ) {
-            augmentedTokens.push({type: token.type, value: token.value});
+            augmentedTokens.push({type: token.type, value: `<span class="overlay_keyword">${token.value}</span>`});
+        } else if (token.type === 'whitespace') {
+            augmentedTokens.push({type: token.type, value: `<span class="overlay_whitespace">${token.value}</span>`});
         } else {
-            augmentedTokens.push(token);
+            augmentedTokens.push({type: token.type, value: `<span class="overlay_literal">${token.value}</span>`});
         }
     }
 
-    return augmentedTokens.join(' ');
+    return augmentedTokens.map((token) => token.value).join('');
 }
