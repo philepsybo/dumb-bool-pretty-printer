@@ -28,6 +28,24 @@ export function checkSanity(tokens) {
         isSane = false;
     }
 
+    let parenthesesStack = [];
+    for (let i = 0; i < parentheses.length; i++) {
+        const token = parentheses[i];
+        if (token.type === 'openParenthesis') {
+            parenthesesStack.push(token);
+            continue;
+        } 
+        
+        if (token.type === 'closeParenthesis') {
+            const lastOpen = parenthesesStack.pop();
+            if (!lastOpen) {
+                logError('Parenthesis-ordering is incorrect. At least one closing parenthesis is found without a corresponding opening parenthesis.');
+                isSane = false;
+                break;
+            }
+        }
+    }
+
     if (openBracketCount !== closeBracketCount) {
         logError('Mismatched brackets []');
         if (openBracketCount > closeBracketCount) {
@@ -39,6 +57,24 @@ export function checkSanity(tokens) {
         isSane = false;
     }
 
+    let bracketStack = [];
+    for (let i = 0; i < brackets.length; i++) {
+        const token = brackets[i];
+        if (token.type === 'openBracket') {
+            bracketStack.push(token);
+            continue;
+        } 
+        
+        if (token.type === 'closeBracket') {
+            const lastOpen = bracketStack.pop();
+            if (!lastOpen) {
+                logError('Bracket-ordering is incorrect. At least one closing bracket is found without a corresponding opening bracket.');
+                isSane = false;
+                break;
+            }
+        }
+    }
+
     if (openCurlyBraceCount !== closeCurlyBracesCount) {
         logError('Mismatched curly braces {}');
         if (openCurlyBraceCount > closeCurlyBracesCount) {
@@ -48,6 +84,24 @@ export function checkSanity(tokens) {
             logError(`Extra ${closeCurlyBracesCount - openCurlyBraceCount} closing curly brace(s)`);
         }
         isSane = false;
+    }
+
+    let curlyBraceStack = [];
+    for (let i = 0; i < curlyBraces.length; i++) {
+        const token = curlyBraces[i];
+        if (token.type === 'openCurlyBrace') {
+            curlyBraceStack.push(token);
+            continue;
+        } 
+        
+        if (token.type === 'closeCurlyBrace') {
+            const lastOpen = curlyBraceStack.pop();
+            if (!lastOpen) {
+                logError('Curly-brace-ordering is incorrect. At least one closing curly brace is found without a corresponding opening curly brace.');
+                isSane = false;
+                break;
+            }
+        }
     }
 
     if (conditionalIfCount !== conditionalThenCount) {
