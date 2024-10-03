@@ -14,6 +14,12 @@ export function augmentInput(input) {
             augmentedTokens.push({type: token.type, value: `<span class="overlay_keyword">${token.value}</span>`});
         } else if (token.type === 'whitespace') {
             augmentedTokens.push({type: token.type, value: `<span class="overlay_whitespace">${token.value}</span>`});
+        } else if (token.type === 'openParenthesis' || token.type === 'closeParenthesis') {
+            augmentedTokens.push({type: token.type, value: `<span class="overlay_parenthesis">${token.value}</span>`});
+        } else if (token.type === 'openBracket' || token.type === 'closeBracket') {
+            augmentedTokens.push({type: token.type, value: `<span class="overlay_bracket">${token.value}</span>`});
+        } else if (token.type === 'openCurlyBrace' || token.type === 'closeCurlyBrace') {
+            augmentedTokens.push({type: token.type, value: `<span class="overlay_curlyBrace">${token.value}</span>`});
         } else {
             augmentedTokens.push({type: token.type, value: `<span class="overlay_literal">${token.value}</span>`});
         }

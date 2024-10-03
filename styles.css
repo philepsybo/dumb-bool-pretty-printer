@@ -9,6 +9,7 @@
     --grid-row-gap: 0.4rem;
     --keyword-color: #2469ff;
     --padding-left-right: 0.9rem;
+    --parenthesis-color: #1fa800;
     --primary-color: #2d9246;
     --primary-color-darker: #5f55e6;
     --secondary-color: white;
@@ -259,4 +260,16 @@ textarea {
 
 .overlay_keyword {
     color: var(--keyword-color);
+}
+
+.overlay_curlyBrace {
+    color: var(--curly-brace-color);
+}
+
+.overlay_bracket {
+    color: var(--bracket-color);
+}
+
+.overlay_parenthesis {
+    color: var(--parenthesis-color);
 }
