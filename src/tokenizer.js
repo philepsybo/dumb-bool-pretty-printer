@@ -1,6 +1,7 @@
 import { conjunction, disjunction, conditionalIf, conditionalThen } from 'language';
 
 export function simpleTokenize(expression) {
+    //todo: preserve number of concatenated whitespaces as single token and furthermore preserve line breaks and tabs
     const regex = /(\s+|[(){}\[\]])/;
     const bareTokens = expression.split(regex);
 
