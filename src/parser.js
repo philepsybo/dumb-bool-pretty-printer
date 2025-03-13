@@ -1,3 +1,5 @@
+import { logError } from "logger";
+
 export function buildAbstractSyntaxTree(tokens) {
     const treeWithGroups = {
         type: 'group',
@@ -32,8 +34,10 @@ export function buildAbstractSyntaxTree(tokens) {
                 if (child.type === 'conditionalIf') {
                     const condition = node.children[i + 1];
                     if (node.children[i + 2]?.type !== 'conditionalThen') {
-                        logError('Expected conditionalThen after conditionalIf');
-                        logError('Error occured near: ' + node.children.slice(i - 1, i + 4).map((t) => t.value).join(' '));
+                        logError('Expected conditionalThen after conditionalIf. When using more complex expressions withing conditionals, surround them with parentheses.');
+                        console.log(node);
+                        
+                        logError('Error occured near: -->' + node.children[i + 1].value + '<--');
                         throw new Error("Invalid syntax");
 
                     }
