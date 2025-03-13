@@ -35,8 +35,6 @@ export function buildAbstractSyntaxTree(tokens) {
                     const condition = node.children[i + 1];
                     if (node.children[i + 2]?.type !== 'conditionalThen') {
                         logError('Expected conditionalThen after conditionalIf. When using more complex expressions withing conditionals, surround them with parentheses.');
-                        console.log(node);
-                        
                         logError('Error occured near: -->' + node.children[i + 1].value + '<--');
                         throw new Error("Invalid syntax");
 
